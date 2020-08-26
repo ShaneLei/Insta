@@ -11,7 +11,7 @@
 
                 <div class="card__panel-head">
                     <div class="poster__info">
-                        <a href="{% url 'user_detail' post.author.id %}" class="poster__name">
+                        <a href="{% url 'profile' post.author.id %}" class="poster__name">
                             {% if post.author.profile_pic %}
                                 <img class="poster__profilepic" src="/{{ post.author.profile_pic }}">
                             {% endif %}
@@ -25,13 +25,33 @@
                 </a>
 
                 <div class="card__panel-body">
+                    <!-- like display -->
                     <div class="likes">
                         {% if post.get_like_count %}
                             {{ post.get_like_count }} like{% if post.get_like_count > 1 %}s{% endif %}
                         {% endif %}
                     </div>
+
+                    <!-- comment display -->
+                    <ul class="comment-list">
+                        <a class="view-more"></a>
+                        {% for comment in post.comments.all %}
+                        <li class="comment-list__comment">
+                            <a href="{% url 'profile' comment.user.pk %}" class="user">
+                                {{ comment.user.username }}
+                            </a>
+                            <span class="comment">{{ comment.comment }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
                     <section class="input-row">
+                        <!-- like input -->
                         <i class="fa {% has_user_liked_post post user %} submit-like" aria-hidden="true"></i>
+                        
+                        <!-- comment input -->
+                        <div class="comment-input-wrapper">
+                            <input class="add-comment" type="text" placeholder="Add a comment...">
+                        </div>
                         <div class="hidden-data {{ post.pk }}" style="display: none;">
                             <span class="post-pk">{{ post.pk }}</span>
                         </div>
